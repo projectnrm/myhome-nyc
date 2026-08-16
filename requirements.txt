@@ -1,0 +1,7 @@
+requests>=2.31
+duckdb>=1.0
+pandas>=2.2
+pyarrow>=16.0
+streamlit>=1.37
+pydeck>=0.9
+python-dotenv>=1.0

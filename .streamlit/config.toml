@@ -1,0 +1,11 @@
+# Streamlit's native widget theme (radio, button, slider, checkbox accents) is
+# separate from the custom CSS block in deed_theft_index/app/style.py — the CSS
+# can't override it, so it has to be set here or Streamlit's default red leaks
+# through on every native control. Colors match the NYC Opportunity Standard
+# blue palette (CLAUDE.md Section 8) already used in style.py.
+[theme]
+primaryColor = "#004cbe"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f0f6fa"
+textColor = "#0c264d"
+font = "sans serif"
