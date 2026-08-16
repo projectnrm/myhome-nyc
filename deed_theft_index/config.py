@@ -3,6 +3,7 @@
 Keep this the single source of truth so ingest/pipeline/app modules never hardcode
 a Socrata ID or a point value. If CLAUDE.md's decisions change, update here first.
 """
+import os
 
 SOCRATA_BASE_URL = "https://data.cityofnewyork.us/resource/{dataset_id}.json"
 
@@ -309,4 +310,17 @@ DOC_TYPE_NEVER_STANDALONE = ("RPTT", "RPTT&RET", "RETT")
 
 DATA_RAW_DIR = "data/raw"
 DATA_PROCESSED_DIR = "data/processed"
-DUCKDB_PATH = f"{DATA_PROCESSED_DIR}/deed_theft_index.duckdb"
+
+# data/processed/*.duckdb is gitignored (Section 9: "pulled/derived data, not
+# committed") — correct for local dev, but it means a fresh clone (e.g. a
+# Streamlit Community Cloud deploy) has no database at all. data/deploy/ carries
+# one intentional exception: a trimmed, size-capped (<100MB, GitHub's non-LFS
+# limit) copy with only the 3 tables the app actually queries (properties,
+# filings_joined, sales_history — see the deploy note in README for how it's
+# built), committed on purpose. Prefer the full local file when it exists
+# (accurate local dev/demo data); fall back to the committed trimmed copy when
+# it doesn't (a fresh deploy) — no environment variable or manual config needed
+# either way.
+_FULL_DUCKDB_PATH = f"{DATA_PROCESSED_DIR}/deed_theft_index.duckdb"
+_DEPLOY_DUCKDB_PATH = "data/deploy/deed_theft_index.duckdb"
+DUCKDB_PATH = _FULL_DUCKDB_PATH if os.path.exists(_FULL_DUCKDB_PATH) else _DEPLOY_DUCKDB_PATH
