@@ -21,6 +21,7 @@ import streamlit as st
 
 from deed_theft_index.app import history, how_scoring_works, public_view, sche_helper, self_lookup
 from deed_theft_index.app.style import CSS
+from deed_theft_index.config import DEMO_MODE, DEMO_TEST_ADDRESS
 
 st.set_page_config(page_title="MyHome", page_icon="🏠", layout="wide")
 st.markdown(CSS, unsafe_allow_html=True)
@@ -53,6 +54,14 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+if DEMO_MODE:
+    st.info(
+        "**Demo build.** Property-level records here are synthetic, so no real "
+        "homeowner's risk factors are ever published. Try the address "
+        f"**{DEMO_TEST_ADDRESS}** in any lookup. The neighborhood heatmap shows real, "
+        "aggregated scores from NYC Open Data."
+    )
 
 # Custom nav (not st.radio) — a plain horizontal link row per the NYC
 # Opportunity homepage reference, not a form control. session_state holds the

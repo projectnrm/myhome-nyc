@@ -19,6 +19,26 @@ python scripts/build.py    # join + score -> data/processed/deed_theft_index.duc
 streamlit run deed_theft_index/app/main.py
 ```
 
+## Deploy data (demo only)
+
+A fresh clone has no `data/processed/` database, so the app falls back to the
+committed `data/deploy/deed_theft_index.duckdb` and shows a "Demo build" banner.
+That file never holds real property-level data, because an address-level list of
+vulnerable homes is the target list this project exists to protect
+(CLAUDE.md Section 8):
+
+- `properties`, `filings_joined`, `sales_history`: synthetic rows only (owner names
+  start with `DEMO:`). Try **1 Centre Street, Manhattan** in any lookup.
+- `cd_risk_aggregate`: real scores, averaged by community district (no BBL,
+  address, owner, or factor flags; districts under 100 properties are dropped).
+
+Rebuild it after a real scoring run with:
+
+```bash
+python scripts/build_deploy_db.py   # reads data/processed/, writes data/deploy/
+python -m pytest tests/             # fails if anything real slipped in
+```
+
 ## Layout
 
 ```

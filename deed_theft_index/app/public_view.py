@@ -164,11 +164,22 @@ def render() -> None:
 
     con = duckdb.connect(DUCKDB_PATH, read_only=True)
     try:
-        cd_agg = con.execute("""
-            SELECT cd AS community_district, avg(risk_score) AS avg_risk_score, count(*) AS n_properties
-            FROM properties
-            GROUP BY cd
-        """).fetchdf()
+        # The deploy DB ships a precomputed, community-district-level aggregate of
+        # the real scores (cd_risk_aggregate) alongside synthetic property rows —
+        # prefer it when present so the public map stays real without any real
+        # property-level row ever being committed (scripts/build_deploy_db.py).
+        tables = {t for (t,) in con.execute("SHOW TABLES").fetchall()}
+        if "cd_risk_aggregate" in tables:
+            cd_agg = con.execute("""
+                SELECT cd AS community_district, avg_risk_score, n_properties
+                FROM cd_risk_aggregate
+            """).fetchdf()
+        else:
+            cd_agg = con.execute("""
+                SELECT cd AS community_district, avg(risk_score) AS avg_risk_score, count(*) AS n_properties
+                FROM properties
+                GROUP BY cd
+            """).fetchdf()
     except duckdb.CatalogException:
         st.info("No scored data yet — run `python scripts/build.py` after ingestion.")
         return

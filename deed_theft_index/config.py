@@ -324,3 +324,14 @@ DATA_PROCESSED_DIR = "data/processed"
 _FULL_DUCKDB_PATH = f"{DATA_PROCESSED_DIR}/deed_theft_index.duckdb"
 _DEPLOY_DUCKDB_PATH = "data/deploy/deed_theft_index.duckdb"
 DUCKDB_PATH = _FULL_DUCKDB_PATH if os.path.exists(_FULL_DUCKDB_PATH) else _DEPLOY_DUCKDB_PATH
+
+# The committed deploy DB is DEMO DATA ONLY (see scripts/build_deploy_db.py): every
+# property-level row is synthetic, and the only real data is the neighborhood-level
+# aggregate the public heatmap reads. Individual risk factors for real addresses are
+# exactly the target list CLAUDE.md Section 8 says must never be public, so they are
+# never committed. DEMO_MODE lets the UI say so plainly.
+DEMO_MODE = DUCKDB_PATH == _DEPLOY_DUCKDB_PATH
+# Seeded BBL 1001210001 (scripts/seed_demo_data.py KNOWN_TEST_BBL) — the one demo
+# record that resolves from a real address via Geoclient.
+DEMO_TEST_ADDRESS = "1 Centre Street, Manhattan"
+
