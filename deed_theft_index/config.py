@@ -72,16 +72,18 @@ NEIGHBORHOOD_CENTROIDS = {
     "Flushing": (40.7654, -73.8318),
 }
 
-# CLAUDE.md Section 3a — 5 of 6 scored features in scope for the hackathon.
-# "exemption_lapse" is cut first if time is short (most build-complex, worth least).
+# CLAUDE.md Section 3a planned 5 of 6 features for the hackathon. 4 shipped:
+# "tax_lien_history" is ingested (ingest/tax_liens.py) but the join onto
+# `properties` is still a TODO (pipeline/join.py), so score.py sets it FALSE for
+# every property. Listing it as scored would show a factor that can never fire,
+# so it sits with the cut features ("Not part of the score yet") until the join lands.
 SCORED_FEATURES = [
     "free_and_clear",
     "senior_disabled_exemption",
     "long_tenure_no_deed_activity",
     "individually_owned",
-    "tax_lien_history",
 ]
-CUT_FEATURES = ["exemption_lapse"]
+CUT_FEATURES = ["tax_lien_history", "exemption_lapse"]
 
 # CLAUDE.md Section 7 — v1 Weighting (draft, pending fair-housing/civil-rights legal review).
 # Two pillars, 0-100 total. Neighborhood appreciation is intentionally NOT a scored input —
@@ -119,7 +121,7 @@ FEATURE_CAVEATS = {
     "senior_disabled_exemption": "Only captures enrolled seniors. “Not on file” means missing data, never “confirmed not a senior.”",
     "long_tenure_no_deed_activity": "Can't distinguish an occupied aging owner from an informally inherited, absentee-owned home — both high-risk, different reasons.",
     "individually_owned": "A legitimate estate-planning trust can pattern-match as LLC-like even though the real beneficiary is an individual.",
-    "tax_lien_history": "A binary flag for now — doesn't yet distinguish real distress from a short administrative gap.",
+    "tax_lien_history": "Not connected yet: the city's tax lien sale lists are downloaded, but matching them to properties is still to be built. Until then no property gets these points.",
     "exemption_lapse": "Cut from this hackathon build (needs multi-year exemption history); shown here for transparency about what isn't scored yet.",
 }
 

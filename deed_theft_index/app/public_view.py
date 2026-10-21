@@ -231,4 +231,11 @@ def render() -> None:
         # Fixed regardless of row count now — the row list scrolls internally
         # (max-height 260px in _searchable_table_html) rather than the iframe
         # growing/shrinking with it, so this height doesn't need to track len(table).
-        components.html(_searchable_table_html(table), height=340)
+        # st.iframe replaces st.components.v1.html, which Streamlit has deprecated for
+        # removal. The HTML is built here from config neighborhood names (escaped),
+        # never from user input. Fallback keeps older Streamlit versions working.
+        table_html = _searchable_table_html(table)
+        if hasattr(st, "iframe"):
+            st.iframe(table_html, height=340)
+        else:
+            components.html(table_html, height=340)

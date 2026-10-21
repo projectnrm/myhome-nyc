@@ -17,11 +17,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import duckdb
 import pandas as pd
 
-from deed_theft_index.config import DUCKDB_PATH, NEIGHBORHOODS, SCORE_WEIGHTS
+from deed_theft_index.config import DUCKDB_PATH, NEIGHBORHOODS, SCORE_WEIGHTS, SCORED_FEATURES
 
 random.seed(0)
 
-SCORED_FEATURES = [f for f in SCORE_WEIGHTS if f != "exemption_lapse"]
 BLDG_CLASSES = ["A1", "A2", "B1", "B2", "R4", "C0", "C1"]  # 1-3 family / condo / co-op mix
 
 # 1 Centre Street, Manhattan resolves to this BBL via the live Geoclient v2 API
